@@ -1,0 +1,176 @@
+create db:
+    create daatbase boot2root;
+show db:    
+    show daatbases;
+    show schemes;
+         ->this is another way of show database
+    filter applied
+    show daatbases like "%root";
+         -> % symple is a 1 or more character ignore
+    show databases like "boot%";
+         ->this is alternative
+    select schema_name from information_schema.schemata;
+          ->this is another way
+    select schema_name from information_schema.schemata where schema_name like "%root";
+select db:
+      use boot2root;
+remove db:
+      drop database boot2root;
+copy db:
+      sudo mysql boot2root > /home/mathi/copy.sql
+--------------------------------------------------------------------------
+create table:
+       create table mathi1(
+    -> id int not null auto_increment,
+    -> name varchar(50) not null,
+    -> hacker varchar(20) not null,
+    -> age int not null,
+    -> primary key(id));
+
+   this new 
+     temporary table
+       only add temporary
+show table;
+       show tables;
+       detail show
+          describe mathi1;
+       show full tables;
+       show tables in boot2root;
+       show tables from boot2root;
+       show tables from boot2root like "bi%";
+
+edit table:
+   add colume
+        alter table billion add age int not null;
+        alter table billion add now time not null after id;
+   modify colume 
+        alter table billion modify now year;
+   delete colume 
+        alter table billion drop now;
+   rename the colume name 
+         alter table billion change age amount int;
+rename table
+   rename table billion to billionaire;
+   alter table billion rename to bill;
+truncate:
+      truncate is a table all data delete this is not recovery.
+       truncate table mathi1;
+describe | desc:
+      this is show table data types clearly.
+      describe or desc mathi1;
+remove table:
+        drop table mathi1;
+copy/clone tables:
+          create table original( id int primary key not null, name varchar(45) default null, product varchar(45) default null, country varchar(25) default null, year int not null);
+          insert into original(id,name,product,country,year)values(1,'math','computer','usa',2000),(2,'mathi2','laptop','india',2018),(3,'mathi2','program','mathi',2022);
+          create table if not exists duplicat_table select * from original_table;
+----------- separe value only copy
+           create table if not exists duplicate select * from original where year='2000';
+       ----this is only copy data type 
+         create table duplicate_tab like original;
+-------------another way 
+      insert duplicate_tab select * from original;
+------anoth database tabel copy 
+      create database new_db;
+      create table new_db.new_table like boot2root.original;
+      insert new_db.new_table select * from boot2root.original;
+repair table:
+       i dont to learn
+      create table vehicle(vehicle_no varchar(18),modelname varchar(45),
+    -> cost_price decimal(10,2),
+    -> sell_price decimal(10,2));
+      insert into vehicle(vehicle_no,modelname,cost_price,sell_price)values
+    -> ('M2001','math',30000000,30),('M2002','mathu',3000,3),('M2','M',2000,2);
+      select * from vehicle;
+       select table_name,engine from information_schema.tables where table_name='vehicle';
+       repair table vehicle;
+      alter table vehicle engine='myisam';
+      repair table vehicle;
+     mysql>     CREATE TABLE memberships (  
+    ->         id INT AUTO_INCREMENT PRIMARY KEY,  
+    ->         name VARCHAR(55) NOT NULL,  
+    ->         email VARCHAR(55) NOT NULL,  
+    ->         plan VARCHAR(45) NOT NULL,  
+    ->         validity_date DATE NOT NULL  
+    ->     ) ENGINE = MyISAM;
+      INSERT INTO memberships (name, email, plan, validity_date)  
+    -> VALUES('Stephen', 'stephen@javatpoint.com', 'Gold', '2020-06-13'),  
+    ->       ('Jenifer', 'jenifer@javatpoint.com', 'Platinum', '2020-06-10'),  
+    ->       ('david', 'david@javatpoint.com', 'Silver', '2020-06-15');  
+      select * from memberships;
+      REPAIR TABLE memberships QUICK EXTENDED;
+unique and default;
+     create table t1(name varchar(50) not null,company varchar(50) default "M2", unique(name));
+       insert into t1(name) value("mathivanan");
+      select * from t1;
+primary key add and delete;
+       alter table t2 drop primary key;
+       alter table t2 add primary key(id);
+       -----check 
+        desc t2;
+foreign key: 
+     create table atoz(id int auto_increment,name varchar(19) not null,primary key(id));
+      create table orders(orderid int not null,ordername varchar(20) not null,
+    -> personid int,primary key (orderid),foreign key(personid) references atoz(id));
+select keyword:
+     select * from memberships;
+     select name from memberships;
+      select distinct name from memberships;
+      this only show value one time
+where keyword:
+       select sell_price from vehicle where sell_price='2';
+      select * from vehicle where sell_price='30';
+      select * from vehicle where sell_price between 0 and 15;
+        select * from vehicle where sell_price<>3;
+      select * from vehicle where sell_price=3 and modelname='mathu';
+    select * from vehicle where sell_price=2 or sell_price=20;
+    select * from vehicle where sell_price=2 and not sell_price=20;
+order by keyword:
+    ase-> atoz
+    desc->not
+    select * from vehicle order by vehicle_no asc;
+     select * from vehicle order by vehicle_no desc;
+null and !null value find:
+     select * from vehicle where vehicle_no is not null;
+    select * from vehicle where vehicle_no is  null;
+update keyword:
+     you update should where condition implement
+    update vehicle set modelname='race car',sell_price=10000 where vehicle_no='ford';
+    select * from vehicle;
+delete keyword:
+     you must use where condition
+     delete from vehicle where sell_price=2;
+      select * from vehicle;
+limit keyword:
+      select * from vehicle where sell_price=30 limit 1;
+in keyword:
+       select * from vehicle where vehicle_no in ('bmw');
+between keyword:
+    this is used to some range value
+    select * from vehicle where cost_price between 0 and 400;
+alias :
+    select * from vehicle as v;
+inner join:
+    create table bisman(id int auto_increment,name varchar(20),age int not null,primary key(id));
+     insert into bisman(name,age)values('math',20),('mathi',22),('mathivanan',30);
+     insert into bisman(name,age)values('praveen',20),('karthick',22),('sanmic',30);
+     create table billioman(id int auto_increment,name varchar(20),age int not null,primary key(id));
+     insert into billioman(name,age)values('math',20),('mathi',22),('mathivanan',30);
+      insert into billioman(name,age)values('gomathi',20),('bharat',22),('guna',30);
+     select * from billioman inner join bisman on billioman.name=bisman.name;
+left join:
+     select * from billioman left join bisman on billioman.name=bisman.name;right join:
+    select * from billioman right join bisman on billioman.name=bisman.name;user create:
+     show all users--
+       select user from mysql.user;
+   create user math@localhost identified by "mathi2001";
+   grant create,delete,insert,select,update on *.* to math@localhost;
+   show grants for math@localhost;
+show user:
+     select user from mysql.user;
+    select user();
+    select current_user();
+change user password:
+     set password for 'math'@'localhost'=password('math2001');
+     alter user math@localhost identified by 'mathi2001';
+
